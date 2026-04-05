@@ -681,7 +681,7 @@
                 });
                 const data = await response.json();
                 if (data.success) {
-                    window.location.href = 'success.html';
+                    window.location.href = 'https://funiec.pythonanywhere.com/success/success.html';
                 } else {
                     alert('Error: ' + (data.message || 'Unknown error'));
                 }
